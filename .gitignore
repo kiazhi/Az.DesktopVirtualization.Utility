@@ -3,3 +3,4 @@
 
 # custom exclusion
 .test
+/src/Az.DesktopVirtualization.Utility/en-US
