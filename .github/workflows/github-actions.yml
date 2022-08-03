@@ -73,8 +73,7 @@ jobs:
         shell: pwsh
         run: |
           Invoke-Expression `
-            -Command "./test/Analyse.Scripts.ps1" `
-            -Passthru
+            -Command "./test/Analyse.Scripts.ps1"
       - name: Perform a Pester test from the command-line
         shell: pwsh
         run: |
