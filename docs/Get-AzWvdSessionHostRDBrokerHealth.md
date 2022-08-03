@@ -28,7 +28,7 @@ perform the health check request with the RDBroker.
 ### Example 1: Get all RDBroker health from session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth
 ```
 
 ```output
@@ -73,7 +73,7 @@ This command gets all of the RDBroker health on the session host. The default di
 ### Example 2: Get primary RDBroker health from the session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check BrokerURI
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth -Check BrokerURI
 ```
 
 ```output
@@ -89,14 +89,14 @@ RegionUrl         : https://rdbroker-cus-r0.wvd.microsoft.com/
 ClusterUrl        : https://rdbroker-c101-cus-r0.wvd.microsoft.com/
 ```
 
-`Get-AzWvdSessionHostBrokerHealthCheck` uses `-Check` parameter with the `BrokerURI` option to
+`Get-AzWvdSessionHostRDBrokerHealth` uses `-Check` parameter with the `BrokerURI` option to
 request the health from the specific URI configured on the session host registry.
 
 
 ### Example 3: Get global RDBroker health from the session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check BrokerURIGlobal
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth -Check BrokerURIGlobal
 ```
 
 ```output
@@ -112,14 +112,14 @@ RegionUrl         : https://rdbroker-jpw-r1.wvd.microsoft.com/
 ClusterUrl        : https://rdbroker-c102-jpw-r1.wvd.microsoft.com/
 ```
 
-`Get-AzWvdSessionHostBrokerHealthCheck` uses `-Check` parameter with the `BrokerURIGlobal` option to
+`Get-AzWvdSessionHostRDBrokerHealth` uses `-Check` parameter with the `BrokerURIGlobal` option to
 request the health from the specific URI configured on the session host registry.
 
 
 ### Example 4: Get RDBroker diagnostics health from the session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check DiagnosticsURI
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth -Check DiagnosticsURI
 ```
 
 ```output
@@ -135,14 +135,14 @@ RegionUrl         : https://rddiagnostics-cus-r0.wvd.microsoft.com/
 ClusterUrl        : https://rddiagnostics-c101-cus-r0.wvd.microsoft.com/
 ```
 
-`Get-AzWvdSessionHostBrokerHealthCheck` uses `-Check` parameter with the `DiagnosticsURI` option to
+`Get-AzWvdSessionHostRDBrokerHealth` uses `-Check` parameter with the `DiagnosticsURI` option to
 request the health from the specific URI configured on the session host registry.
 
 
 ### Example 5: Get RDBroker individual health report entries from session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check DiagnosticsURI -HealthReport
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth -Check DiagnosticsURI -HealthReport
 ```
 
 ```output
@@ -172,14 +172,14 @@ Tags         : {}
 ...            ...
 ```
 
-`Get-AzWvdSessionHostBrokerHealthCheck` uses `-HealthReport` parameter to return all the health report
+`Get-AzWvdSessionHostRDBrokerHealth` uses `-HealthReport` parameter to return all the health report
 entries from the RDBroker service response.
 
 
 ### Example 6: Get RDBroker health raw JSON response from session host
 
 ```powershell
-PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check BrokerURI -Raw
+PS C:\> Get-AzWvdSessionHostRDBrokerHealth -Check BrokerURI -Raw
 ```
 
 ```output
@@ -214,7 +214,7 @@ PS C:\> Get-AzWvdSessionHostBrokerHealthCheck -Check BrokerURI -Raw
 }
 ```
 
-`Get-AzWvdSessionHostBrokerHealthCheck` uses `-Raw` parameter to output the raw `JSON` response
+`Get-AzWvdSessionHostRDBrokerHealth` uses `-Raw` parameter to output the raw `JSON` response
 from RDBroker service.
 
 ## PARAMETERS
