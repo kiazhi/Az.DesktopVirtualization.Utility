@@ -26,8 +26,8 @@ jobs:
           
           Install-Module `
             -Name `
-              Pester
-              , PSScriptAnalyzer
+              Pester `
+              , PSScriptAnalyzer `
               , platyPS
   unit-testing:
     needs: [install-dependencies]
