@@ -1,0 +1,103 @@
+name: GitHub Actions
+on:
+  push:
+      branches: [ "development" ]
+  pull_request:
+      branches: [ "main" ]
+jobs:
+  install-dependencies:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PowerShell module cache
+        id: cacher
+        uses: actions/cache@v3
+        with:
+          path: "~/.local/share/powershell/Modules"
+          key: ${{ runner.os }}-Pester-PSScriptAnalyzer-platyPS
+      - name: Install from PSGallery
+        if: steps.cacher.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Set-PSRepository `
+            -Name "PSGallery" `
+            -InstallationPolicy "Trusted"
+          
+          Install-Module `
+            -Name `
+              Pester
+              , PSScriptAnalyzer
+              , platyPS
+  unit-testing:
+    needs: [install-dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+      - name: Generate external help file
+        shell: pwsh
+        run: |
+          New-ExternalHelp `
+            -Path "./docs" `
+            -OutputPath "./src/Az.DesktopVirtualization.Utility/en-US" `
+            -Force
+
+          Remove-Item `
+            -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
+            -Force
+            
+          Rename-Item `
+            -Path "./src/Az.DesktopVirtualization.Utility/en-US/rename-me-help.xml" `
+            -NewName "Az.DesktopVirtualization.Utility-help.xml" `
+            -Force
+      - name: Lint with PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Invoke-Expression `
+            -Command "./test/Analyse.Scripts.ps1" `
+            -Passthru
+      - name: Perform a Pester test from the command-line
+        shell: pwsh
+        run: |
+          Invoke-Pester `
+            -Path "./test/Unit.Tests.ps1" `
+            -Passthru  | Export-CliXml `
+              -Path "./test/Unit.Tests.xml"
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Unit-Tests-Result
+          path: "./test/Unit.Tests.xml"
+    if: ${{ always() }}
+  publish-to-gallery:
+    if: ${{ github.ref_name == 'main' }}
+    needs: [install-dependencies, unit-testing]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate external help file
+        shell: pwsh
+        run: |
+          New-ExternalHelp `
+            -Path "./docs" `
+            -OutputPath "./src/Az.DesktopVirtualization.Utility/en-US" `
+            -Force
+
+          Remove-Item `
+            -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
+            -Force
+            
+          Rename-Item `
+            -Path "./src/Az.DesktopVirtualization.Utility/en-US/rename-me-help.xml" `
+            -NewName "Az.DesktopVirtualization.Utility-help.xml" `
+            -Force
+      - name: Build and publish
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        shell: pwsh
+        run: |
+          Publish-Module `
+            -Path "./src/Az.DesktopVirtualization.Utility" `
+            -NuGetApiKey $env:NUGET_API_KEY `
+            -Verbose
