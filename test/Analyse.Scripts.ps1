@@ -3,7 +3,7 @@
 @("CmdletDesign", "ScriptingStyle", "CodeFormatting", "ScriptSecurity", "PSGallery") | ForEach-Object -Process `
 {
     Write-Output `
-        -InputObject ("INFO: {0} Analysing module with PSScriptAnalyzer {1} setting" -f `
+        -InputObject ("INFO: {0} - Analysing module with PSScriptAnalyzer {1} setting" -f `
             $(Get-Date -Format "yyyy-MM-dd HH:mm:ss zzzz") `
             , $_)
 
