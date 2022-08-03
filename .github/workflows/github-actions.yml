@@ -59,10 +59,12 @@ jobs:
             -OutputPath "./src/Az.DesktopVirtualization.Utility/en-US" `
             -Force
 
-          Remove-Item `
-            -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
-            -Force
-            
+          if ((Test-Path -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml")) {
+            Remove-Item `
+              -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
+              -Force
+          }
+          
           Rename-Item `
             -Path "./src/Az.DesktopVirtualization.Utility/en-US/rename-me-help.xml" `
             -NewName "Az.DesktopVirtualization.Utility-help.xml" `
