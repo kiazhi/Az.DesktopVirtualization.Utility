@@ -79,7 +79,7 @@ jobs:
           
           Install-Module `
             -Name `
-              , platyPS `
+              platyPS `
               , Az.DesktopVirtualization
       - name: Generate external help file
         shell: pwsh
