@@ -20,11 +20,11 @@ Test-AzWvdRDBrokerLatency [[-Uri] <Uri>] [[-Port] <Int16>] [[-NumberOfWarmUpPing
 
 ## DESCRIPTION
 
-The `Test-AzWvdBrokerLatency` cmdlet sends TCP echo request packets to RDBroker service uri and
+The `Test-AzWvdRDBrokerLatency` cmdlet sends TCP echo request packets to RDBroker service uri and
 returns the echo response replies. You can use this cmdlet to determine whether a particular
 computer can contact the RDBroker service uri on a specific port across an IP network.
 
-You can use the parameters of `Test-AzWvdBrokerLatency` to specify the `-Port` port number to test
+You can use the parameters of `Test-AzWvdRDBrokerLatency` to specify the `-Port` port number to test
 if Port 443 is open and the `-NumberOfPing` to send a number of echo requests to the destination to
 measure the latency between the local computer to the destination.
 
@@ -35,7 +35,7 @@ measure the latency between the local computer to the destination.
 This example sends echo request packets from the local computer to the RDBroker service.
 
 ```powershell
-PS C:\> Test-AzWvdBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 80
+PS C:\> Test-AzWvdRDBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 80
 ```
 
 ```output
@@ -59,7 +59,7 @@ AverageLatency(ms)     : 87.5955
 SumLatency(ms)         : 350.382
 ```
 
-`Test-AzWvdBrokerLatency` uses the `-Uri` parameter to specify the RDBroker URL destination and the
+`Test-AzWvdRDBrokerLatency` uses the `-Uri` parameter to specify the RDBroker URL destination and the
 `-Port` parameter to specify the RDBroker listening port number.
 
 ### Example 2: Send echo requests to RDBroker service with verbose outputs
@@ -68,7 +68,7 @@ This example sends echo request packets from the local computer to the RDBroker 
 displays verbose output of the activities.
 
 ```powershell
-PS C:\> Test-AzWvdBrokerLatency -Uri https://rdbroker.wvdselfhost.microsoft.com/ -Port 443 -Verbose
+PS C:\> Test-AzWvdRDBrokerLatency -Uri https://rdbroker.wvdselfhost.microsoft.com/ -Port 443 -Verbose
 ```
 
 ```output
@@ -104,7 +104,7 @@ AverageLatency(ms)     : 88.7215
 SumLatency(ms)         : 354.886
 ```
 
-`Test-AzWvdBrokerLatency` uses `-Verbose` parameter to provide verbose output of the activities
+`Test-AzWvdRDBrokerLatency` uses `-Verbose` parameter to provide verbose output of the activities
 similar to `psping`.
 
 ### Example 3: Send 5 warm up echo requests prior sending 10 echo requests to RDBroker service to measure the latency
@@ -114,7 +114,7 @@ RDBroker service before sending 10 echo requests to measure the latency between 
 with the RDBroker service.
 
 ```powershell
-PS C:\> Test-AzWvdBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 443 -NumberOfWarmUpPing 0 -NumberOfPing 10
+PS C:\> Test-AzWvdRDBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 443 -NumberOfWarmUpPing 0 -NumberOfPing 10
 ```
 
 ```output
@@ -139,7 +139,7 @@ AverageLatency(ms)     : 89.0097
 SumLatency(ms)         : 890.097
 ```
 
-`Test-AzWvdBrokerLatency` uses `-NumberOfWarmUpPing` parameter to specify a range from 0 to 5 warm
+`Test-AzWvdRDBrokerLatency` uses `-NumberOfWarmUpPing` parameter to specify a range from 0 to 5 warm
 up echo requests before sending 10 echo requests to the RDBroker service.
 
 To skip warm up echo request, user can specify a value of 0 `-NumberOfWarmUpPing 0` to skip warm up
@@ -151,7 +151,7 @@ of 10 `-NumberOfPing 10` to increase the number of echo requests during the test
 ### Example 4: Send 10 echo requests to RDBroker service and view details of each echo request
 
 ```powershell
-PS C:\> Test-AzWvdBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 443 -NumberOfPing 10 | Select-Object -ExpandProperty Entries | Format-Table
+PS C:\> Test-AzWvdRDBrokerLatency -Uri rdbroker.wvdselfhost.microsoft.com -Port 443 -NumberOfPing 10 | Select-Object -ExpandProperty Entries | Format-Table
 ```
 
 ```powershell
@@ -169,7 +169,7 @@ Index DestinationUri                              DestinationDnsHostName        
     9 https://rdbroker.wvdselfhost.microsoft.com/ rdbroker.wvdselfhost.microsoft.com 23.100.108.163                   443 ::ffff:10.10.0.138      56974 Reachable        86.583
 ```
 
-`Test-AzWvdBrokerLatency` supports pipeline output of the `PSObject`. User can expand the `Entries`
+`Test-AzWvdRDBrokerLatency` supports pipeline output of the `PSObject`. User can expand the `Entries`
 property and view each echo request activity information.
 
 ## PARAMETERS
