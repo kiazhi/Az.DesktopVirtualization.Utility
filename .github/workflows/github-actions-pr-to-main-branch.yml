@@ -2,6 +2,13 @@ name: Pull request to main branch
 on:
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "!.github/**"
+      - "!assets/**"
+      - "!docs"
+      - "!src/docs/**"
+      - "!README.md"
 jobs:
   unit-testing:
     runs-on: ubuntu-latest
