@@ -1,8 +1,6 @@
-name: GitHub Actions
+name: Main Branch
 on:
   push:
-      branches: [ "development" ]
-  pull_request:
       branches: [ "main" ]
 jobs:
   install-dependencies:
@@ -88,11 +86,27 @@ jobs:
           path: "./test/Unit.Tests.xml"
     if: ${{ always() }}
   publish-to-gallery:
-    if: ${{ github.ref_name == 'main' }}
     needs: [install-dependencies, unit-testing]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: "~/.local/share/powershell/Modules"
+          key: ${{ runner.os }}-Pester-PSScriptAnalyzer-platyPS
+      - name: Install from PSGallery
+        if: steps.cacher.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          Set-PSRepository `
+            -Name "PSGallery" `
+            -InstallationPolicy "Trusted"
+          
+          Install-Module `
+            -Name `
+              Pester `
+              , PSScriptAnalyzer `
+              , platyPS
       - name: Generate external help file
         shell: pwsh
         run: |
@@ -101,9 +115,11 @@ jobs:
             -OutputPath "./src/Az.DesktopVirtualization.Utility/en-US" `
             -Force
 
-          Remove-Item `
-            -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
-            -Force
+          if ((Test-Path -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml")) {
+            Remove-Item `
+              -Path "./src/Az.DesktopVirtualization.Utility/en-US/Az.DesktopVirtualization.Utility-help.xml" `
+              -Force
+          }
             
           Rename-Item `
             -Path "./src/Az.DesktopVirtualization.Utility/en-US/rename-me-help.xml" `
