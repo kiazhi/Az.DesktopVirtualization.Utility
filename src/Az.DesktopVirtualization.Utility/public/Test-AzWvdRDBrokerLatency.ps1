@@ -1,7 +1,6 @@
 Function Test-AzWvdRDBrokerLatency {
 
     [CmdletBinding(
-        # SupportsShouldProcess = $True,
         ConfirmImpact = "High")]
 
     Param (
@@ -10,7 +9,7 @@ Function Test-AzWvdRDBrokerLatency {
             , ValueFromPipeline = $True
             , ValueFromPipelineByPropertyName = $True
         )]
-        [Uri]
+        [uri]
         $Uri,
 
         [ValidateRange(0, 65535)]
@@ -19,7 +18,7 @@ Function Test-AzWvdRDBrokerLatency {
             , ValueFromPipeline = $True
             , ValueFromPipelineByPropertyName = $True
         )]
-        [Int16]
+        [int16]
         $Port,
 
         [ValidateRange(0, 5)]
@@ -29,7 +28,7 @@ Function Test-AzWvdRDBrokerLatency {
             , ValueFromPipeline = $True
             , ValueFromPipelineByPropertyName = $True
         )]
-        [Int16]
+        [int16]
         $NumberOfWarmUpPing = 1,
 
         [Parameter(
@@ -37,7 +36,7 @@ Function Test-AzWvdRDBrokerLatency {
             , ValueFromPipeline = $True
             , ValueFromPipelineByPropertyName = $True
         )]
-        [Int16]
+        [int16]
         $NumberOfPing = 4
     )
 
