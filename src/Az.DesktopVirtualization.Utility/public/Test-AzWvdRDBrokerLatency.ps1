@@ -1,7 +1,6 @@
 Function Test-AzWvdRDBrokerLatency {
 
     [CmdletBinding(
-        # SupportsShouldProcess = $True,
         ConfirmImpact = "High")]
 
     Param (
