@@ -1,16 +1,17 @@
 Function Get-AzWvdSessionHostRDBrokerHealth {
+
     [CmdletBinding(
         SupportsShouldProcess = $True,
         ConfirmImpact = "High")]
 
-    Param (  
+    Param (
 
         [ValidateSet(
-            “BrokerURI”
-            , ”BrokerURIGlobal”
-            , ”DiagnosticsURI”
+            "BrokerURI"
+            , "BrokerURIGlobal"
+            , "DiagnosticsURI"
         )]
-        [ArgumentCompleter({ “BrokerURI” , ”BrokerURIGlobal” , ”DiagnosticsURI” })]
+        [ArgumentCompleter({ "BrokerURI" , "BrokerURIGlobal" , "DiagnosticsURI" })]
         [Parameter(
             Mandatory = $False
             , ValueFromPipeline = $True
@@ -18,7 +19,7 @@ Function Get-AzWvdSessionHostRDBrokerHealth {
             , ParameterSetName = "HealthCheck"
         )]
         [Alias("C")]
-        [String]
+        [string]
         $Check,
 
         [Parameter(
@@ -28,7 +29,7 @@ Function Get-AzWvdSessionHostRDBrokerHealth {
             , ParameterSetName = "HealthCheck"
         )]
         [Alias("R", "Report")]
-        [Switch]
+        [switch]
         $HealthReport,
 
         [Parameter(
@@ -36,7 +37,7 @@ Function Get-AzWvdSessionHostRDBrokerHealth {
             , ValueFromPipeline = $True
             , ValueFromPipelineByPropertyName = $True
         )]
-        [Switch]
+        [switch]
         $Raw
     )
 
@@ -46,26 +47,45 @@ Function Get-AzWvdSessionHostRDBrokerHealth {
 
         if ($PSBoundParameters.ContainsKey("Check")) {
 
-            $Response = Invoke-WebRequest `
-                -Uri "$(Get-ItemPropertyValue `
-                -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" `
-                -Name $Check)/api/health" `
-                -UseBasicParsing | Select-Object `
-                -ExpandProperty "Content"
+            if (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" -PathType "Container") {
+
+                $Response = Invoke-WebRequest `
+                    -Uri "$(Get-ItemPropertyValue `
+                        -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" `
+                        -Name $Check)/api/health" `
+                    -UseBasicParsing | Select-Object `
+                    -ExpandProperty "Content"
+            }
         }
         else {
-            $Response = @("BrokerURI", "BrokerURIGlobal", "DiagnosticsURI") | ForEach-Object -Process `
-            {
-                Invoke-WebRequest `
-                    -Uri "$(Get-ItemPropertyValue `
-                    -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" `
-                    -Name $_)/api/health" `
+
+            if (!(Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" -PathType "Container")) {
+
+                $Uri = "https://rdbroker.wvdselfhost.microsoft.com"
+
+                $Response = Invoke-WebRequest `
+                    -Uri "$Uri/api/health" `
                     -UseBasicParsing | Select-Object `
-                    -ExpandProperty "Content" `
+                    -ExpandProperty "Content"
+
+            }
+            else {
+
+                $Response = @("BrokerURI", "BrokerURIGlobal", "DiagnosticsURI") | ForEach-Object -Process {
+
+                    Invoke-WebRequest `
+                        -Uri "$(Get-ItemPropertyValue `
+                        -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" `
+                        -Name $_)/api/health" `
+                        -UseBasicParsing | Select-Object `
+                        -ExpandProperty "Content"
+                }
+                
             }
         }
 
         if ($PSBoundParameters.ContainsKey("HealthReport")) {
+
             $HealthReportsObject = @()
             
             if ([string]::IsNullOrEmpty($Check)) {
@@ -79,17 +99,15 @@ Function Get-AzWvdSessionHostRDBrokerHealth {
 
             $ArrayIndex = 0
 
-            $Response | ConvertFrom-Json | ForEach-Object -Process `
-            {
+            $Response | ConvertFrom-Json | ForEach-Object -Process {
 
-                ($_.HealthCheckStatus.HealthReport.Entries).PSObject.Properties | ForEach-Object -Process `
-                {
+                ($_.HealthCheckStatus.HealthReport.Entries).PSObject.Properties | ForEach-Object -Process {
+
                     $HealthReportObject = [PSCustomObject]@{
                         HealthReport =  "$($HealthCheck[$ArrayIndex]) - $($_.Name)"
                     }
             
-                    ($_.Value).PSObject.Properties | ForEach-Object -Process `
-                    {
+                    ($_.Value).PSObject.Properties | ForEach-Object -Process {
             
                         $HealthReportObject | Add-Member `
                             -MemberType NoteProperty `
