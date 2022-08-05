@@ -179,7 +179,10 @@ Function Test-AzWvdRDBrokerLatency {
 
         $LatencyStatistic = $ConnectionEntries | Measure-Object `
             -Property "Latency(ms)" `
-            -AllStats
+            -Minimum `
+            -Maximum `
+            -Average `
+            -Sum
 
         if ($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent) {
             Write-Verbose `
