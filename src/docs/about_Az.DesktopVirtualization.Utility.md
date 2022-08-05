@@ -15,8 +15,22 @@ configure or troubleshoot Azure Virtual Desktop environment.
 
 # EXAMPLES
 
+The following statement will install the module.
+
 ```powershell
 Install-Module -Name Az.DesktopVirtualization.Utility
+```
+
+The following statement will list all the available cmdlet for this module.
+
+```powershell
+Get-Command -Module Az.DesktopVirtualization.Utility
+```
+
+The following statement will render all the cmdlets full helps including examples.
+
+```powershell
+Get-Command -Module Az.DesktopVirtualization.Utility | Get-Help -Full
 ```
 
 # NOTE
@@ -36,6 +50,7 @@ Author: Ryen Kia Zhi Tang
 - AzureVirtualDesktop
 - AVD
 - WindowsVirtualDesktop
+- WVD
 - DesktopVirtualization
 - Utility
 - AzurePowerShell
