@@ -36,7 +36,7 @@ jobs:
         shell: pwsh
         run: |
           New-ExternalHelp `
-            -Path "./docs" `
+            -Path "./src/docs" `
             -OutputPath "./src/Az.DesktopVirtualization.Utility/en-US" `
             -Force
 
